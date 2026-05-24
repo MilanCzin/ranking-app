@@ -3,7 +3,6 @@
 <head>
     <title>Ranking App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -22,7 +21,15 @@
 
         <ol>
             {% for title in titles %}
-                <li>{{ title }}</li>
+            <li>
+                <div class="item-row">
+                    <span class="item-text">{{ title }}</span>
+
+                    <a href="/delete/{{ title }}">
+                        <button class="delete">Delete</button>
+                    </a>
+                </div>
+            </li>
             {% endfor %}
         </ol>
     </div>

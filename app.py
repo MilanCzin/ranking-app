@@ -30,7 +30,7 @@ def save():
 
 
 # -------------------------
-# MAIN PAGE
+# HOME
 # -------------------------
 @app.route("/")
 def index():
@@ -38,7 +38,7 @@ def index():
 
 
 # -------------------------
-# START BINARY SEARCH
+# START BINARY SEARCH ADD
 # -------------------------
 @app.route("/start_add", methods=["POST"])
 def start_add():
@@ -90,7 +90,7 @@ def compare():
 
 
 # -------------------------
-# ANSWER
+# ANSWER (binary search step)
 # -------------------------
 @app.route("/answer", methods=["POST"])
 def answer():
@@ -109,7 +109,19 @@ def answer():
 
 
 # -------------------------
-# RUN (IMPORTANT FOR DEPLOY)
+# DELETE ITEM
+# -------------------------
+@app.route("/delete/<path:title>")
+def delete(title):
+    if title in titles:
+        titles.remove(title)
+        save()
+
+    return redirect(url_for("index"))
+
+
+# -------------------------
+# RUN
 # -------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
