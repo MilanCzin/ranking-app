@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ranking App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📊 My Ranking</h1>
+
+    <form action="/start_add" method="POST" class="card">
+        <input type="text" name="title" placeholder="Add new item..." required>
+        <button type="submit">Add</button>
+    </form>
+
+    <div class="card">
+        <h2>List</h2>
+
+        <ol>
+            {% for title in titles %}
+                <li>{{ title }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+</div>
+
+</body>
+</html>

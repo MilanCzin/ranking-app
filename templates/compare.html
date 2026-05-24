@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Compare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>⚔️ Comparison</h1>
+
+    <div class="card compare-card">
+
+        <div class="block">
+            <div class="label">NEW ITEM</div>
+            <div class="title big">{{ new_title }}</div>
+        </div>
+
+        <div class="vs">VS</div>
+
+        <div class="block">
+            <div class="label">CURRENT ITEM</div>
+            <div class="title big">{{ existing }}</div>
+        </div>
+
+    </div>
+
+    <div class="card">
+        <p class="question">Which one is better?</p>
+
+        <form action="/answer" method="POST" class="buttons">
+            <button name="answer" value="yes" class="yes">
+                {{ new_title }} is better
+            </button>
+
+            <button name="answer" value="no" class="no">
+                {{ existing }} is better
+            </button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
