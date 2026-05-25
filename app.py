@@ -1,32 +1,90 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import json
+import sqlite3
 import os
 
 app = Flask(__name__)
 app.secret_key = "change_this_key"
 
-FILE = "titles.json"
+DB = "titles.db"
 
 
 # -------------------------
-# LOAD DATA
+# DATABASE
 # -------------------------
-if os.path.exists(FILE):
-    try:
-        with open(FILE, "r", encoding="utf-8") as f:
-            titles = json.load(f)
-    except:
-        titles = []
-else:
-    titles = []
+def get_db():
+    conn = sqlite3.connect(DB)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db():
+    conn = get_db()
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS titles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE NOT NULL
+        )
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+init_db()
 
 
 # -------------------------
-# SAVE DATA
+# GET TITLES
 # -------------------------
-def save():
-    with open(FILE, "w", encoding="utf-8") as f:
-        json.dump(titles, f, indent=2)
+def get_titles():
+    conn = get_db()
+
+    titles = conn.execute("""
+        SELECT name FROM titles
+        ORDER BY id
+    """).fetchall()
+
+    conn.close()
+
+    return [title["name"] for title in titles]
+
+
+# -------------------------
+# INSERT TITLE
+# -------------------------
+def insert_title(position, title):
+    conn = get_db()
+
+    titles = get_titles()
+
+    titles.insert(position, title)
+
+    conn.execute("DELETE FROM titles")
+
+    for item in titles:
+        conn.execute(
+            "INSERT INTO titles (name) VALUES (?)",
+            (item,)
+        )
+
+    conn.commit()
+    conn.close()
+
+
+# -------------------------
+# DELETE TITLE
+# -------------------------
+def delete_title(title):
+    conn = get_db()
+
+    conn.execute(
+        "DELETE FROM titles WHERE name = ?",
+        (title,)
+    )
+
+    conn.commit()
+    conn.close()
 
 
 # -------------------------
@@ -34,14 +92,21 @@ def save():
 # -------------------------
 @app.route("/")
 def index():
-    return render_template("index.html", titles=titles)
+    titles = get_titles()
+
+    return render_template(
+        "index.html",
+        titles=titles
+    )
 
 
 # -------------------------
-# START BINARY SEARCH ADD
+# START ADD
 # -------------------------
 @app.route("/start_add", methods=["POST"])
 def start_add():
+    titles = get_titles()
+
     new_title = request.form.get("title", "").strip()
 
     if not new_title or new_title in titles:
@@ -55,10 +120,12 @@ def start_add():
 
 
 # -------------------------
-# COMPARE STEP
+# COMPARE
 # -------------------------
 @app.route("/compare")
 def compare():
+    titles = get_titles()
+
     new_title = session.get("new_title")
 
     if new_title is None:
@@ -67,19 +134,24 @@ def compare():
     left = session.get("left")
     right = session.get("right")
 
+    # empty list
     if len(titles) == 0:
-        titles.append(new_title)
-        save()
+        insert_title(0, new_title)
+
         session.clear()
+
         return redirect(url_for("index"))
 
+    # finished binary search
     if left > right:
-        titles.insert(left, new_title)
-        save()
+        insert_title(left, new_title)
+
         session.clear()
+
         return redirect(url_for("index"))
 
     mid = (left + right) // 2
+
     existing = titles[mid]
 
     return render_template(
@@ -90,15 +162,16 @@ def compare():
 
 
 # -------------------------
-# ANSWER (binary search step)
+# ANSWER
 # -------------------------
 @app.route("/answer", methods=["POST"])
 def answer():
-    response = request.form.get("answer")
-
     left = session.get("left")
     right = session.get("right")
+
     mid = (left + right) // 2
+
+    response = request.form.get("answer")
 
     if response == "yes":
         session["right"] = mid - 1
@@ -109,13 +182,11 @@ def answer():
 
 
 # -------------------------
-# DELETE ITEM
+# DELETE
 # -------------------------
 @app.route("/delete/<path:title>")
 def delete(title):
-    if title in titles:
-        titles.remove(title)
-        save()
+    delete_title(title)
 
     return redirect(url_for("index"))
 
@@ -125,4 +196,5 @@ def delete(title):
 # -------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+
     app.run(host="0.0.0.0", port=port)
