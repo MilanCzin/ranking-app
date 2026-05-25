@@ -6,64 +6,131 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: #0f1115;
     color: white;
+    min-height: 100vh;
+
+    /* BACKGROUND */
+    background:
+        repeating-linear-gradient(
+            -45deg,
+            #11131a,
+            #11131a 20px,
+            #151922 20px,
+            #151922 40px
+        );
+
+    background-attachment: fixed;
 }
 
+/* PAGE CONTAINER */
 .container {
     width: 100%;
-    max-width: 600px;
+    max-width: 650px;
     margin: auto;
-    padding: 16px;
+    padding: 20px;
+}
+
+/* TITLE */
+h1 {
+    margin-bottom: 15px;
+    font-size: 32px;
+    font-weight: bold;
 }
 
 /* CARD */
 .card {
-    background: #1a1d25;
-    padding: 18px;
-    border-radius: 14px;
-    margin: 16px 0;
+    background: rgba(26, 29, 37, 0.88);
+
+    backdrop-filter: blur(6px);
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    padding: 20px;
+    border-radius: 18px;
+    margin: 18px 0;
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,0.25);
 }
 
 /* INPUT */
 input {
     width: 100%;
-    padding: 14px;
+    padding: 16px;
+
     font-size: 16px;
-    border-radius: 10px;
-    border: none;
+
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+
+    background: rgba(255,255,255,0.04);
+    color: white;
+
     outline: none;
-    margin-bottom: 10px;
+
+    margin-bottom: 12px;
+
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: #4f7cff;
+
+    background: rgba(255,255,255,0.06);
 }
 
 /* BUTTON */
 button {
     width: 100%;
+
     padding: 14px;
+
     border: none;
     border-radius: 12px;
+
     font-weight: bold;
-    cursor: pointer;
-    color: white;
     font-size: 14px;
-    background: #4f7cff;
+
+    cursor: pointer;
+
+    color: white;
+
+    transition:
+        transform 0.15s,
+        opacity 0.15s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+}
+
+/* DEFAULT BUTTON */
+button {
+    background: linear-gradient(
+        135deg,
+        #4f7cff,
+        #6d8dff
+    );
 }
 
 /* LIST */
 ol {
-    padding-left: 20px;
+    padding-left: 24px;
 }
 
 li {
-    margin: 8px 0;
+    margin: 10px 0;
 }
 
-/* ROW */
+/* LIST ROW */
 .item-row {
     display: flex;
+
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+
+    gap: 12px;
 }
 
 .item-text {
@@ -72,10 +139,16 @@ li {
 
 /* DELETE BUTTON */
 .delete {
-    background: #ef4444;
-    padding: 8px 10px;
+    background: linear-gradient(
+        135deg,
+        #dc2626,
+        #ef4444
+    );
+
+    padding: 8px 12px;
+
     font-size: 12px;
-    border-radius: 8px;
+
     width: auto;
 }
 
@@ -90,53 +163,83 @@ li {
 
 .label {
     font-size: 12px;
-    opacity: 0.6;
-    margin-bottom: 6px;
+    opacity: 0.55;
+
+    margin-bottom: 8px;
+
+    letter-spacing: 1px;
 }
 
 .title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
+
     word-break: break-word;
 }
 
 .big {
-    font-size: 22px;
+    font-size: 26px;
 }
 
 .vs {
-    margin: 10px 0;
-    font-size: 16px;
-    opacity: 0.7;
+    margin: 14px 0;
+
+    font-size: 15px;
+    opacity: 0.5;
 }
 
+/* QUESTION */
 .question {
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+
     font-size: 16px;
     opacity: 0.8;
 }
 
-/* COMPARE BUTTONS */
+/* BUTTON ROW */
 .buttons {
     display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 
 .buttons button {
     flex: 1;
 }
 
+/* YES BUTTON */
 .yes {
-    background: #22c55e;
+    background: linear-gradient(
+        135deg,
+        #16a34a,
+        #22c55e
+    );
 }
 
+/* NO BUTTON */
 .no {
-    background: #ef4444;
+    background: linear-gradient(
+        135deg,
+        #dc2626,
+        #ef4444
+    );
 }
 
 /* MOBILE */
 @media (max-width: 500px) {
+
+    h1 {
+        font-size: 26px;
+    }
+
     .buttons {
         flex-direction: column;
+    }
+
+    .big {
+        font-size: 22px;
+    }
+
+    .card {
+        padding: 16px;
     }
 }
